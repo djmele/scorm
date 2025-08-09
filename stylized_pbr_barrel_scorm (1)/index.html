@@ -1,0 +1,115 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Stylized PBR Barrel — Lesson</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link rel="stylesheet" href="styles.css">
+  <script src="scormwrapper.js"></script>
+</head>
+<body>
+  <h1>Stylized PBR Barrel — PBR in Blender (High-level)</h1>
+  <p><em>Lesson packet for: Intermediate 3D Animation / Game Art</em></p>
+
+  <div class="lesson-section">
+    <h2>Learning Objectives</h2>
+    <ul>
+      <li>Understand the PBR workflow (albedo, roughness, metallic, normal, AO).</li>
+      <li>Create a low-to-mid poly stylized barrel in Blender suitable for real-time engines.</li>
+      <li>Bake and assemble texture maps and export optimized assets for a game.</li>
+      <li>Apply design constraints for style consistency and performance (texture atlases, LODs).</li>
+    </ul>
+  </div>
+
+  <div class="lesson-section">
+    <h2>Lesson Tasks (Instructor-led + Studio Work)</h2>
+    <ol>
+      <li>Reference & thumbnail — gather 3 visual references of stylized barrels and make 3 thumbnails (silhouette-focused).</li>
+      <li>Blockout mesh in Blender; maintain silhouette and silhouette-readability at game scale.</li>
+      <li>UV unwrap with texel density target (e.g., 4–8 px/cm equivalent) and pack for atlas use.</li>
+      <li>High-to-low workflow: sculpt or bevel details, bake normal/AO to low poly.</li>
+      <li>Create PBR materials in Blender's Principled BSDF and export maps (png, power-of-two sizes).</li>
+      <li>Integrate in a simple runtime preview (Unity/Unreal/PlayCanvas) or deliver as FBX + maps.</li>
+    </ol>
+  </div>
+
+  <div class="lesson-section">
+    <h2>High-level Discussion Questions</h2>
+    <div class="question"><strong>Q1:</strong> What visual cues make a stylized object readable at small sizes, and how does that influence modeling choices?</div>
+    <div class="question"><strong>Q2:</strong> In a PBR pipeline, when and why would you intentionally break physical accuracy for stylization?</div>
+    <div class="question"><strong>Q3:</strong> How do texture atlases and LODs trade off between memory and visual fidelity? Provide a concrete example for this barrel.</div>
+    <div class="question"><strong>Q4:</strong> Describe three strategies to reduce shader cost on mobile platforms for a PBR material.</div>
+    <div class="question"><strong>Q5:</strong> How does the choice of metallic vs. specular workflow affect your base color (albedo) painting strategy?</div>
+  </div>
+
+  <div class="lesson-section">
+    <h2>Assessment & Quiz (Auto-graded)</h2>
+    <p class="quiz">Complete the multiple choice quiz below. A passing score (70%) marks the SCO complete.</p>
+    <form id="quizForm">
+      <label>1) Principled BSDF's 'Metallic' parameter usually should be:</label><br>
+      <input type="radio" name="q1" value="a"> a) 0 for wood, 1 for metals<br>
+      <input type="radio" name="q1" value="b"> b) 1 for wood, 0 for metals<br>
+      <input type="radio" name="q1" value="c"> c) 0.5 always<br><br>
+
+      <label>2) Which map primarily conveys micro-surface detail baked from a high-res mesh?</label><br>
+      <input type="radio" name="q2" value="a"> a) Albedo<br>
+      <input type="radio" name="q2" value="b"> b) Normal map<br>
+      <input type="radio" name="q2" value="c"> c) AO map<br><br>
+
+      <label>3) Which optimization reduces draw calls?</label><br>
+      <input type="radio" name="q3" value="a"> a) Texture atlas<br>
+      <input type="radio" name="q3" value="b"> b) Increasing texture size<br>
+      <input type="radio" name="q3" value="c"> c) Adding more materials<br><br>
+
+      <button type="button" onclick="submitQuiz()">Submit Quiz</button>
+    </form>
+    <div id="quizResult" style="margin-top:12px;"></div>
+  </div>
+
+  <div class="lesson-section rubric">
+    <h3>Grading Rubric (out of 100)</h3>
+    <ul>
+      <li>Concept & thumbnails — 10 pts</li>
+      <li>Model silhouette & topology — 20 pts</li>
+      <li>UVs & texel density / atlas packing — 15 pts</li>
+      <li>Texture maps quality & baking (normal/AO) — 20 pts</li>
+      <li>Stylized material interpretation & readability — 20 pts</li>
+      <li>Optimization & export readiness (LOD/atlas) — 15 pts</li>
+    </ul>
+  </div>
+
+  <script>
+    // Basic quiz grading
+    function submitQuiz(){
+      var answers = {q1:'a', q2:'b', q3:'a'};
+      var total=0, correct=0;
+      for(var k in answers){
+        total++;
+        var el = document.querySelector('input[name="'+k+'"]:checked');
+        if(el && el.value===answers[k]) correct++;
+      }
+      var pct = (correct/total)*100;
+      var elR = document.getElementById('quizResult');
+      elR.innerHTML = 'Score: '+pct+'% ('+correct+'/'+total+' correct)';
+      // SCORM reporting (attempt to init if API present)
+      if(typeof SCORM !== 'undefined'){
+        if(!SCORM.initialized) SCORM.init();
+        // set lesson_status & score if available
+        try{
+          SCORM.set('cmi.core.score.raw', pct.toString());
+          SCORM.set('cmi.core.score.max','100');
+          SCORM.set('cmi.core.score.min','0');
+          SCORM.set('cmi.core.session_time', '00:05:00'); // example
+          if(pct>=70) SCORM.set('cmi.core.lesson_status','completed');
+          else SCORM.set('cmi.core.lesson_status','incomplete');
+          SCORM.commit();
+        }catch(e){ console.log('SCORM set error', e); }
+      }
+    }
+    // init on load if possible
+    window.addEventListener('load', function(){ if(typeof SCORM !== 'undefined') SCORM.init(); });
+    // finish on unload
+    window.addEventListener('unload', function(){ if(typeof SCORM !== 'undefined') SCORM.finish(); });
+  </script>
+</body>
+</html>

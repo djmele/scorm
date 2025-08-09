@@ -1,0 +1,8 @@
+
+body { font-family: Arial, sans-serif; line-height:1.5; margin:24px; max-width:900px; }
+h1,h2,h3{ margin-top:1.1em; }
+.lesson-section { border-left:4px solid #333; padding-left:12px; margin-bottom:18px; }
+.question { margin:10px 0; padding:8px; background:#f7f7f7; border-radius:4px; }
+.rubric { font-size:0.95em; background:#fff8e1; padding:10px; border-radius:6px; }
+.quiz { margin-top:18px; }
+button { padding:8px 12px; font-size:1em; }
